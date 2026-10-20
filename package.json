@@ -1,6 +1,6 @@
 {
   "name": "ai-usage-bar",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "See your AI coding tool usage as colored bars: Claude Code (any model), OpenAI Codex CLI and DeepSeek.",
   "keywords": [
     "ai",

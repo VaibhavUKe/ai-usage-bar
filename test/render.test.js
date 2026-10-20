@@ -117,3 +117,49 @@ test('install keeps other settings and uninstall removes only ours', () => {
   assert.strictEqual(uninstall({ file }).removed, true);
   assert.deepStrictEqual(JSON.parse(fs.readFileSync(file, 'utf8')), { theme: 'dark' });
 });
+
+const { parseArgs } = require('../bin/cli');
+
+test('styles draw different bars', () => {
+  const src = { contextPct: 40 };
+  const line = (style) => strip(render(src, { style }));
+  assert.strictEqual(line('blocks'), 'ctx ▓▓▓▓░░░░░░ 40%');
+  assert.strictEqual(line('dots'), 'ctx ●●●●○○○○○○ 40%');
+  assert.strictEqual(line('ascii'), 'ctx [####------] 40%');
+  assert.strictEqual(line('emoji'), 'ctx 🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜ 40%');
+  assert.strictEqual(line('pct'), 'ctx 40%');
+  assert.strictEqual(strip(render({ contextPct: 45 }, { style: 'smooth' })), 'ctx ████▌░░░░░ 45%');
+  assert.strictEqual(strip(render({ contextPct: 100 }, { style: 'smooth' })), 'ctx ██████████ 100%');
+});
+
+test('remaining mode, width, segments and no-color', () => {
+  const now = NOW;
+  const src = {
+    name: 'Opus',
+    contextPct: 30,
+    limits: [{ label: '5h', pct: 90, resetsAt: now / 1000 + 600 }],
+    costUsd: 2,
+  };
+  assert.strictEqual(strip(render({ contextPct: 30 }, { remaining: true })), 'ctx ▓▓▓▓▓▓▓░░░ 70% left');
+  assert.strictEqual(strip(render({ contextPct: 50 }, { width: 4 })), 'ctx ▓▓░░ 50%');
+  assert.strictEqual(render(src, { show: ['model', 'limits'], color: false, now }), 'Opus | 5h ▓▓▓▓▓▓▓▓▓░ 90%');
+  assert.strictEqual(render(src, { show: ['limits', 'reset'], color: false, now }), '5h ▓▓▓▓▓▓▓▓▓░ 90% (10m)');
+  assert.ok(!render(src, { color: false, now }).includes('\x1b'));
+  // Color still follows usage in remaining mode: 90% used is red even though 10% is shown.
+  assert.ok(render({ contextPct: 90 }, { remaining: true }).includes('\x1b[31m'));
+});
+
+test('parses flags over environment and records what install saves', () => {
+  const env = { AI_USAGE_BAR_STYLE: 'dots', AI_USAGE_BAR_WIDTH: '8' };
+  const { opts, positional, saved } = parseArgs(['codex', '--style', 'ascii', '--remaining', '--show', 'ctx,limits'], env);
+  assert.strictEqual(opts.style, 'ascii');
+  assert.strictEqual(opts.width, 8);
+  assert.strictEqual(opts.remaining, true);
+  assert.deepStrictEqual(opts.show, ['ctx', 'limits']);
+  assert.deepStrictEqual(positional, ['codex']);
+  assert.deepStrictEqual(saved, ['--style', 'ascii', '--remaining', '--show', 'ctx,limits']);
+  assert.throws(() => parseArgs(['--style', 'nope'], {}), /Unknown style/);
+  assert.throws(() => parseArgs(['--show', 'ctx,bogus'], {}), /Unknown segment/);
+  assert.throws(() => parseArgs(['--width', '0'], {}), /between 1 and 40/);
+  assert.throws(() => parseArgs(['--style'], {}), /needs a value/);
+});

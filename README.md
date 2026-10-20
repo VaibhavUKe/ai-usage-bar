@@ -59,15 +59,48 @@ Preview without installing:
 npx ai-usage-bar demo
 ```
 
+## Styles
+
+Preview them all with `ai-usage-bar styles`:
+
+```
+blocks   Opus | ctx ▓▓▓▓░░░░░░ 42% | 5h ▓▓▓▓▓▓░░░░ 63% (2h08m) | 7d ▓▓▓▓▓▓▓▓▓░ 88% (3d4h) | $1.23
+solid    Opus | ctx ████░░░░░░ 42% | 5h ██████░░░░ 63% (2h08m) | 7d █████████░ 88% (3d4h) | $1.23
+dots     Opus | ctx ●●●●○○○○○○ 42% | 5h ●●●●●●○○○○ 63% (2h08m) | 7d ●●●●●●●●●○ 88% (3d4h) | $1.23
+squares  Opus | ctx ■■■■□□□□□□ 42% | 5h ■■■■■■□□□□ 63% (2h08m) | 7d ■■■■■■■■■□ 88% (3d4h) | $1.23
+ascii    Opus | ctx [####------] 42% | 5h [######----] 63% (2h08m) | 7d [#########-] 88% (3d4h) | $1.23
+smooth   Opus | ctx ████▎░░░░░ 42% | 5h ██████▎░░░ 63% (2h08m) | 7d ████████▊░ 88% (3d4h) | $1.23
+emoji    Opus | ctx 🟩🟩🟩🟩⬜⬜⬜⬜⬜⬜ 42% | 5h 🟨🟨🟨🟨🟨🟨⬜⬜⬜⬜ 63% (2h08m) | 7d 🟥🟥🟥🟥🟥🟥🟥🟥🟥⬜ 88% (3d4h) | $1.23
+pct      Opus | ctx 42% | 5h 63% (2h08m) | 7d 88% (3d4h) | $1.23
+```
+
+`smooth` draws partial cells for finer steps; `emoji` changes color by usage on its own, so it also works without terminal colors; `pct` drops the bars for the most compact line.
+
 ## Options
 
-| Variable | Default | Effect |
-|---|---|---|
-| `AI_USAGE_BAR_EXTRA` | none | Extra sources in the Claude Code status line, e.g. `codex,deepseek` |
-| `AI_USAGE_BAR_WIDTH` | `10` | Bar width in cells (1–40) |
-| `AI_USAGE_BAR_COST` | `1` | Set to `0` to hide session cost |
-| `DEEPSEEK_API_KEY` | none | Enables the DeepSeek balance |
-| `CODEX_HOME` | `~/.codex` | Where Codex keeps its sessions |
+Pass options as flags, or set them as environment variables. Flags given to `install` are saved into the Claude Code status line command, so `ai-usage-bar install --style dots --remaining` keeps that look without any shell setup.
+
+| Flag | Variable | Default | Effect |
+|---|---|---|---|
+| `--style <name>` | `AI_USAGE_BAR_STYLE` | `blocks` | `blocks`, `solid`, `dots`, `squares`, `ascii`, `smooth`, `emoji` or `pct` |
+| `--width <cells>` | `AI_USAGE_BAR_WIDTH` | `10` | Bar width in cells (1–40) |
+| `--show <list>` | `AI_USAGE_BAR_SHOW` | all | Which segments to show: `model,ctx,limits,reset,cost,balance` |
+| `--remaining` | `AI_USAGE_BAR_REMAINING=1` | off | Show what's left (`37% left`) instead of what's used; colors still warn as you run low |
+| `--no-color` | `NO_COLOR=1` | off | Plain text, no colors |
+| `--extra <sources>` | `AI_USAGE_BAR_EXTRA` | none | Extra sources in the Claude Code status line, e.g. `codex,deepseek` |
+| `--interval <sec>` | | `30` | Refresh interval for `watch` (minimum 5) |
+| | `AI_USAGE_BAR_COST=0` | | Hide session cost (same as leaving `cost` out of `--show`) |
+| | `DEEPSEEK_API_KEY` | none | Enables the DeepSeek balance |
+| | `CODEX_HOME` | `~/.codex` | Where Codex keeps its sessions |
+
+Examples:
+
+```sh
+ai-usage-bar install --style smooth --width 8          # finer, shorter bars
+ai-usage-bar install --show model,limits,reset         # only plan limits
+ai-usage-bar install --style pct --remaining           # "5h 37% left | 7d 12% left"
+ai-usage-bar watch codex --style emoji --interval 10
+```
 
 ## Notes
 
