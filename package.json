@@ -1,0 +1,38 @@
+{
+  "name": "claude-code-usage-bar",
+  "version": "1.0.0",
+  "description": "A compact Claude Code status line showing context, 5-hour and weekly usage limits as colored bars.",
+  "keywords": [
+    "claude",
+    "claude-code",
+    "statusline",
+    "status-line",
+    "usage",
+    "rate-limit",
+    "cli"
+  ],
+  "license": "MIT",
+  "author": "VaibhavUKe",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VaibhavUKe/claude-code-usage-bar.git"
+  },
+  "homepage": "https://github.com/VaibhavUKe/claude-code-usage-bar#readme",
+  "bugs": {
+    "url": "https://github.com/VaibhavUKe/claude-code-usage-bar/issues"
+  },
+  "bin": {
+    "claude-code-usage-bar": "bin/cli.js"
+  },
+  "main": "lib/render.js",
+  "files": [
+    "bin",
+    "lib"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  }
+}
