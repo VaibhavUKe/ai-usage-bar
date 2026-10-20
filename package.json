@@ -1,28 +1,32 @@
 {
-  "name": "claude-code-usage-bar",
+  "name": "ai-usage-bar",
   "version": "1.0.0",
-  "description": "A compact Claude Code status line showing context, 5-hour and weekly usage limits as colored bars.",
+  "description": "See your AI coding tool usage as colored bars: Claude Code (any model), OpenAI Codex CLI and DeepSeek.",
   "keywords": [
-    "claude",
-    "claude-code",
-    "statusline",
-    "status-line",
+    "ai",
     "usage",
     "rate-limit",
+    "statusline",
+    "claude",
+    "claude-code",
+    "codex",
+    "openai",
+    "chatgpt",
+    "deepseek",
     "cli"
   ],
   "license": "MIT",
   "author": "VaibhavUKe",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/VaibhavUKe/claude-code-usage-bar.git"
+    "url": "git+https://github.com/VaibhavUKe/ai-usage-bar.git"
   },
-  "homepage": "https://github.com/VaibhavUKe/claude-code-usage-bar#readme",
+  "homepage": "https://github.com/VaibhavUKe/ai-usage-bar#readme",
   "bugs": {
-    "url": "https://github.com/VaibhavUKe/claude-code-usage-bar/issues"
+    "url": "https://github.com/VaibhavUKe/ai-usage-bar/issues"
   },
   "bin": {
-    "claude-code-usage-bar": "bin/cli.js"
+    "ai-usage-bar": "bin/cli.js"
   },
   "main": "lib/render.js",
   "files": [
